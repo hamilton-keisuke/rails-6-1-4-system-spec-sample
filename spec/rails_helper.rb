@@ -61,4 +61,20 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # https://qiita.com/jnchito/items/c7e6e7abf83598a6516d
+  # System Specは毎回Chromeが起動しますが、JavaScriptがなくても実行可能なテストであれば、Chromeなしで検証した方が速度面で有利です。
+  # rails_helper.rbに次のような設定を書けば、Feature Specのときと同じように、
+  # js: trueのタグが付いているときだけChromeが起動するようになります。
+  # 
+  config.before(:each) do |example|
+    if example.metadata[:type] == :system
+      if example.metadata[:js]
+        driven_by :selenium_chrome_headless, screen_size: [1400, 1400]
+      else
+        # :rack_test でテスト失敗しても、chromeのドライバーを使っていないのでエラー時の画面キャプチャは行ってくれないので注意
+        driven_by :rack_test
+      end
+    end
+  end
 end
