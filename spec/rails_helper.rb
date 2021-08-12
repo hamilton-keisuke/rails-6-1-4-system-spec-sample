@@ -78,3 +78,7 @@ RSpec.configure do |config|
     end
   end
 end
+
+require 'webdrivers'
+# アップデートの実行状況をターミナルに出力する
+Webdrivers.logger.level = ::Logger::Severity::DEBUG
